@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using AssurityTest.Helpers;
+using AssurityTest.Models.Common;
+using BoDi;
 using TechTalk.SpecFlow;
 
 namespace AssurityTest.Hooks
@@ -9,18 +8,25 @@ namespace AssurityTest.Hooks
     [Binding]
     public sealed class Hooks
     {
-        // For additional details on SpecFlow hooks see http://go.specflow.org/doc-hooks
+        private readonly IObjectContainer _objectContainer;
+        private APIResponse _apiResponse;
+
+        public Hooks(IObjectContainer objectContainer)
+        {
+            _objectContainer = objectContainer;
+        }
 
         [BeforeScenario]
-        public void BeforeScenario()
+        public void Setup()
         {
-            //TODO: implement logic that has to run before executing each scenario
+            GlobalVariables.ClientUrl = "https://api.tmsandbox.co.nz";
+            _objectContainer.RegisterInstanceAs(_apiResponse);
         }
 
         [AfterScenario]
-        public void AfterScenario()
+        public void Cleanup()
         {
-            //TODO: implement logic that has to run after executing each scenario
+            GlobalVariables.ClientUrl = null;
         }
     }
 }
