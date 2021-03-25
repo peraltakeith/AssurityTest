@@ -1,4 +1,8 @@
-﻿using System;
+﻿using AssurityTest.Helpers;
+using AssurityTest.Models.Category;
+using AssurityTest.Models.Common;
+using NUnit.Framework;
+using System;
 using TechTalk.SpecFlow;
 
 namespace AssurityTest.StepDefinitions
@@ -6,34 +10,55 @@ namespace AssurityTest.StepDefinitions
     [Binding]
     public class GetCategoryDetailsSteps
     {
-        [Given(@"I call the GET categories endpoint ""(.*)""")]
-        public void GivenICallTheGETCategoriesEndpoint(string p0)
+        private APIResponse _apiResponse;
+        private Category _categoryResponse;
+
+        public GetCategoryDetailsSteps(APIResponse apiResponse)
         {
-            ScenarioContext.Current.Pending();
+            _apiResponse = apiResponse;
         }
-        
-        [Then(@"I should get a response with status code (.*)")]
-        public void ThenIShouldGetAResponseWithStatusCode(int p0)
+
+        #region GivenSteps
+        [Given(@"I call the GET categories endpoint ""(.*)""")]
+        public void GivenICallTheGETCategoriesEndpoint(string endpoint)
         {
-            ScenarioContext.Current.Pending();
+            _apiResponse.Response = RestHelper.GetRequest(endpoint);
+        }
+        #endregion
+
+        #region ThenSteps
+        [Then(@"I should get a response with status code (.*)")]
+        public void ThenIShouldGetAResponseWithStatusCode(int expectedStatusCode)
+        {
+            int actualStatusCode = Convert.ToInt32(_apiResponse.Response.StatusCode);
+            Assert.AreEqual(expectedStatusCode, actualStatusCode, "The http status code in the response should be 200.");
         }
         
         [Then(@"the Name in the response should be ""(.*)""")]
-        public void ThenTheNameInTheResponseShouldBe(string p0)
+        public void ThenTheNameInTheResponseShouldBe(string expectedName)
         {
-            ScenarioContext.Current.Pending();
+            _categoryResponse = DeserializationHelper.Deserialize<Category>(_apiResponse.Response);
+            Assert.AreEqual(expectedName, _categoryResponse.Name, $"The Name in the response should be {expectedName}.");
         }
-        
-        [Then(@"CanRelist value in the response should be ""(.*)""")]
-        public void ThenCanRelistValueInTheResponseShouldBe(string p0)
+
+        [Then(@"CanRelist value in the response should be true")]
+        public void ThenCanRelistValueInTheResponseShouldBeTrue()
         {
-            ScenarioContext.Current.Pending();
+            Assert.IsTrue(_categoryResponse.CanRelist, "The CanRelist value in the response should be true.");
         }
         
         [Then(@"the Promotions element with the name ""(.*)"" should have a Description that contains the text ""(.*)""")]
-        public void ThenThePromotionsElementWithTheNameShouldHaveADescriptionThatContainsTheText(string p0, string p1)
+        public void ThenThePromotionsElementWithTheNameShouldHaveADescriptionThatContainsTheText(string promotionName, string expectedDescription)
         {
-            ScenarioContext.Current.Pending();
+            foreach (Promotion promotion in _categoryResponse.Promotions)
+            {
+                if (promotionName.Equals(promotion.Name))
+                {
+                    StringAssert.Contains(expectedDescription, promotion.Description, 
+                        $"The description in the Gallery promotion does not contain {expectedDescription}");
+                }
+            }
         }
+        #endregion
     }
 }
