@@ -9,7 +9,7 @@ namespace AssurityTest.Hooks
     public sealed class Hooks
     {
         private readonly IObjectContainer _objectContainer;
-        private APIResponse _apiResponse;
+        private APIResponse _apiResponse = new APIResponse();
 
         public Hooks(IObjectContainer objectContainer)
         {

@@ -9,11 +9,11 @@ namespace AssurityTest.Models.Category
             ListingFeeTiers = new List<ListingFeeTier>();
         }
 
-        public int Bundle { get; set; }
+        public decimal Bundle { get; set; }
         public decimal EndDate { get; set; }
-        public int Feature { get; set; }
-        public int Gallery { get; set; }
-        public int Listing { get; set; }
+        public decimal Feature { get; set; }
+        public decimal Gallery { get; set; }
+        public decimal Listing { get; set; }
         public decimal Reserve { get; set; }
         public decimal Subtitle { get; set; }
         public decimal TenDays { get; set; }
@@ -23,7 +23,7 @@ namespace AssurityTest.Models.Category
 
     public class ListingFeeTier
     {
-        public int MinimumTierPrice { get; set; }
-        public int FixedFee { get; set; }
+        public decimal MinimumTierPrice { get; set; }
+        public decimal FixedFee { get; set; }
     }
 }
